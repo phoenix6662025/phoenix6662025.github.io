@@ -1,0 +1,2525 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Motors - Магазин редких премиальных автомобилей</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --dark-bg: #0a0a0a;
+            --darker-bg: #050505;
+            --gold: #d4af37;
+            --silver: #c0c0c0;
+            --light-gray: #2a2a2a;
+            --text-light: #f0f0f0;
+            --text-gray: #b0b0b0;
+            --error-red: #ff4d4d;
+            --error-bg: rgba(255, 77, 77, 0.1);
+            --success-green: #4CAF50;
+            --success-bg: rgba(76, 175, 80, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .content-wrapper {
+            flex: 1;
+            padding-bottom: 120px;
+        }
+        
+        nav {
+            background-color: var(--darker-bg);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--gold);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: var(--silver);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--gold);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--gold);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-outline {
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            background: transparent;
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--gold);
+            color: var(--dark-bg);
+        }
+        
+        .btn-gold {
+            background-color: var(--gold);
+            color: var(--dark-bg);
+            border: none;
+        }
+        
+        .btn-gold:hover {
+            background-color: #c19b2c;
+        }
+        
+        .btn-silver {
+            background-color: var(--silver);
+            color: var(--dark-bg);
+            border: none;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .page-title {
+            margin-bottom: 2rem;
+            color: var(--gold);
+            text-align: center;
+        }
+        
+        .section-title {
+            color: var(--gold);
+            margin: 2rem 0 1rem;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80') no-repeat center center/cover;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 3rem;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            padding: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: var(--gold);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--text-light);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .feature-card {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+        }
+        
+        .feature-card i {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        
+        .cars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .car-card {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .car-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+        }
+        
+        .car-img-placeholder {
+            height: 200px;
+            background-color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-gray);
+            font-style: italic;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .car-content {
+            padding: 1.5rem;
+        }
+        
+        .car-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--gold);
+        }
+        
+        .car-price {
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .car-available {
+            color: var(--silver);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .car-desc {
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .btn-view {
+            width: 100%;
+        }
+        
+        .car-detail-container {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .car-gallery {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .main-img-placeholder {
+            width: 100%;
+            height: 400px;
+            background-color: #1a1a1a;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-gray);
+            font-style: italic;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .thumbnails {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .thumbnail-placeholder {
+            width: 100px;
+            height: 70px;
+            background-color: #1a1a1a;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-gray);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 0.5rem;
+        }
+        
+        .car-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .car-info h1 {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        
+        .price {
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .car-available {
+            color: var(--silver);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .car-specs {
+            margin: 1.5rem 0;
+        }
+        
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .spec-name {
+            color: var(--text-gray);
+        }
+        
+        .spec-value {
+            font-weight: 500;
+        }
+        
+        .order-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        
+        .order-section .btn {
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .order-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-gray);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 4px;
+            border: 1px solid var(--light-gray);
+            background-color: var(--darker-bg);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        
+        .form-control.error {
+            border-color: var(--error-red);
+            background-color: var(--error-bg);
+        }
+        
+        .error-message {
+            color: var(--error-red);
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+        
+        .payment-options {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .payment-option {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-option.active {
+            border-color: var(--gold);
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+        
+        .payment-option i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--gold);
+        }
+        
+        .cash-warning {
+            background-color: rgba(212, 175, 55, 0.1);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .cash-warning.active {
+            display: block;
+        }
+        
+        .card-form {
+            background-color: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            display: none;
+        }
+        
+        .card-form.active {
+            display: block;
+        }
+        
+        .card-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .order-success {
+            display: none;
+            background-color: var(--light-gray);
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .order-success h2 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+        
+        .order-success p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .profile-container {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .user-info {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--light-gray);
+            padding: 2rem;
+            border-radius: 8px;
+        }
+        
+        .user-info h2 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .info-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .info-label {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+        
+        .info-value {
+            font-size: 1.1rem;
+        }
+        
+        .recent-cars {
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        .recent-cars h2 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+        
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .order-card {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .order-status {
+            background-color: var(--gold);
+            color: var(--dark-bg);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .order-status.cancelled {
+            background-color: var(--error-red);
+        }
+        
+        .order-status.completed {
+            background-color: var(--success-green);
+        }
+        
+        .order-details p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .order-info {
+            font-style: italic;
+            margin-top: 1rem;
+            color: var(--text-gray);
+        }
+        
+        .order-actions {
+            margin-top: 1rem;
+        }
+        
+        .no-orders {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .no-orders i {
+            font-size: 3rem;
+            color: var(--silver);
+            margin-bottom: 1rem;
+        }
+        
+        .no-orders h3 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .auth-container, .register-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: var(--light-gray);
+            padding: 2.5rem;
+            border-radius: 8px;
+        }
+        
+        .auth-container h2, .register-container h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--gold);
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-gray);
+        }
+        
+        .form-footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+        
+        .name-fields {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .name-fields .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        footer {
+            background-color: var(--darker-bg);
+            padding: 2rem 5%;
+            text-align: center;
+            border-top: 1px solid var(--gold);
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-section h3 {
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-gray);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--gold);
+            color: var(--dark-bg);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            margin-top: 2rem;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .car-detail-container, .profile-container {
+                flex-direction: column;
+            }
+            
+            .name-fields {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+        
+        /* Добавленные стили для админ-панели */
+        .admin-panel {
+            margin-top: 2rem;
+        }
+        
+        .admin-section {
+            background-color: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .admin-table th, .admin-table td {
+            padding: 0.8rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: left;
+        }
+        
+        .admin-table th {
+            background-color: rgba(212, 175, 55, 0.2);
+            color: var(--gold);
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .admin-btn {
+            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .btn-delete {
+            background-color: var(--error-bg);
+            color: var(--error-red);
+            border: 1px solid var(--error-red);
+        }
+        
+        .btn-update {
+            background-color: rgba(75, 192, 192, 0.2);
+            color: #4bc0c0;
+            border: 1px solid #4bc0c0;
+        }
+        
+        .btn-cancel {
+            background-color: rgba(255, 159, 64, 0.2);
+            color: #ff9f40;
+            border: 1px solid #ff9f40;
+        }
+        
+        .confirmation-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: var(--darker-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid var(--gold);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+        
+        /* Стили для уведомлений */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 4px;
+            z-index: 2000;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .notification.success {
+            background-color: var(--success-green);
+        }
+        
+        .notification.error {
+            background-color: var(--error-red);
+        }
+        
+        /* Стили для страницы "О нас" */
+        .about-hero {
+            height: 60vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 3rem;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .about-hero-content {
+            max-width: 800px;
+            padding: 2rem;
+        }
+        
+        .about-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--gold);
+        }
+        
+        .about-section {
+            margin-bottom: 3rem;
+        }
+        
+        .about-section h2 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .services-list {
+            list-style: none;
+            padding-left: 1rem;
+        }
+        
+        .services-list li {
+            margin-bottom: 1rem;
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .services-list li:before {
+            content: "•";
+            color: var(--gold);
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .team-member {
+            background-color: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .team-member h3 {
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+        
+        .position {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .experience {
+            color: var(--text-gray);
+            font-style: italic;
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-info i {
+            color: var(--gold);
+            font-size: 1.2rem;
+            min-width: 24px;
+        }
+        
+        /* Модальное окно для изменения количества */
+        .update-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .update-content {
+            background-color: var(--darker-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid var(--gold);
+        }
+        
+        .update-content h3 {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Вкладки для заказов */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 0.5rem;
+        }
+        
+        .tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background-color: rgba(212, 175, 55, 0.2);
+            color: var(--gold);
+        }
+        
+        /* Стили для выпадающего списка статуса */
+        .status-select {
+            background-color: var(--darker-bg);
+            color: var(--text-light);
+            border: 1px solid var(--gold);
+            padding: 0.3rem;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <nav>
+            <a href="#" class="logo" onclick="showPage('home'); return false;">
+                <i class="fas fa-car"></i>
+                Luxury Motors
+            </a>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" data-page="home" onclick="showPage('home'); return false;">Главная</a>
+                <a href="#" class="nav-link" data-page="cars" onclick="showPage('cars'); return false;">Каталог</a>
+                <a href="#" class="nav-link" data-page="about" onclick="showPage('about'); return false;">О нас</a>
+                <a href="#" class="nav-link" data-page="profile" onclick="handleProfileClick(); return false;">Личный кабинет</a>
+            </div>
+            <div class="auth-buttons" id="auth-buttons">
+                <a href="#" class="btn btn-outline" onclick="showPage('login'); return false;">Войти</a>
+                <a href="#" class="btn btn-gold" onclick="showPage('register'); return false;">Регистрация</a>
+            </div>
+        </nav>
+
+        <div id="home" class="page active">
+            <div class="container">
+                <div class="hero">
+                    <div class="hero-content">
+                        <h1>Эксклюзивные автомобили для истинных ценителей</h1>
+                        <p>Откройте для себя мир редких и премиальных автомобилей, сочетающих в себе историю, роскошь и непревзойденную инженерию</p>
+                        <a href="#" class="btn btn-gold" onclick="showPage('cars'); return false;">Смотреть коллекцию</a>
+                    </div>
+                </div>
+                
+                <div class="features">
+                    <div class="feature-card">
+                        <i class="fas fa-crown"></i>
+                        <h3>Эксклюзивность</h3>
+                        <p>Только редкие, лимитированные и коллекционные модели, которые вы не найдете в обычных салонах</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Гарантия подлинности</h3>
+                        <p>Все автомобили проходят тщательную проверку истории и технического состояния</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-handshake"></i>
+                        <h3>Персональный сервис</h3>
+                        <p>Индивидуальный подход к каждому клиенту и полное сопровождение сделки</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="cars" class="page">
+            <div class="container">
+                <h1 class="page-title">Наша коллекция</h1>
+                <div class="cars-grid" id="cars-grid"></div>
+            </div>
+        </div>
+
+        <div id="car-detail" class="page"></div>
+
+        <div id="order" class="page"></div>
+
+        <div id="profile" class="page"></div>
+
+        <div id="login" class="page"></div>
+
+        <div id="register" class="page"></div>
+        
+        <div id="about" class="page">
+            <div class="container">
+                <div class="about-hero">
+                    <div class="about-hero-content">
+                        <h1>О компании Luxury Motors</h1>
+                        <p>Эксклюзивные автомобили для истинных ценителей</p>
+                    </div>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Наша история</h2>
+                    <p>Основанная в 2005 году, наша компания начинала с небольшого салона в Москве. За годы работы мы завоевали доверие коллекционеров по всему миру и стали одним из ведущих игроков на рынке редких автомобилей.</p>
+                    <p>Наша миссия - находить и предоставлять клиентам самые уникальные и желанные автомобили, которые становятся не просто средством передвижения, а настоящими произведениями искусства.</p>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Наши услуги</h2>
+                    <ul class="services-list">
+                        <li>Поиск эксклюзивных автомобилей по запросу клиента</li>
+                        <li>Полная проверка истории и технического состояния</li>
+                        <li>Организация доставки по всему миру</li>
+                        <li>Хранение автомобилей в специализированном хранилище</li>
+                        <li>Реставрация и подготовка к продаже</li>
+                        <li>Экспертная оценка коллекционных автомобилей</li>
+                        <li>Сопровождение сделок купли-продажи</li>
+                    </ul>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Наша команда</h2>
+                    <div class="team-grid">
+                        <div class="team-member">
+                            <h3>Алексей Петров</h3>
+                            <p class="position">Основатель и CEO</p>
+                            <p class="experience">20 лет в автомобильном бизнесе</p>
+                        </div>
+                        <div class="team-member">
+                            <h3>Мария Иванова</h3>
+                            <p class="position">Главный эксперт</p>
+                            <p class="experience">15 лет оценки редких автомобилей</p>
+                        </div>
+                        <div class="team-member">
+                            <h3>Дмитрий Сидоров</h3>
+                            <p class="position">Технический директор</p>
+                            <p class="experience">18 лет реставрации классических авто</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-section contact-section">
+                    <h2>Контакты</h2>
+                    <div class="contact-info">
+                        <p><i class="fas fa-map-marker-alt"></i> Москва, ул. Премиум, 1</p>
+                        <p><i class="fas fa-phone"></i> +7 (495) 123-45-67</p>
+                        <p><i class="fas fa-envelope"></i> info@luxurymotors.ru</p>
+                        <p><i class="fas fa-clock"></i> Пн-Пт: 10:00 - 20:00, Сб-Вс: 11:00 - 18:00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Luxury Motors</h3>
+                <p>Эксклюзивные редкие автомобили для истинных коллекционеров</p>
+                <div class="social-links">
+                    <a href="#" onclick="return false;"><i class="fab fa-instagram"></i></a>
+                    <a href="#" onclick="return false;"><i class="fab fa-facebook"></i></a>
+                    <a href="#" onclick="return false;"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Навигация</h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="showPage('home'); return false;">Главная</a></li>
+                    <li><a href="#" onclick="showPage('cars'); return false;">Каталог</a></li>
+                    <li><a href="#" onclick="showPage('about'); return false;">О нас</a></li>
+                    <li><a href="#" onclick="handleProfileClick(); return false;">Личный кабинет</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <ul class="footer-links">
+                    <li><i class="fas fa-map-marker-alt"></i> Москва, ул. Премиум, 1</li>
+                    <li><i class="fas fa-phone"></i> +7 (495) 123-45-67</li>
+                    <li><i class="fas fa-envelope"></i> info@luxurymotors.ru</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2023 Luxury Motors. Все права защищены.
+        </div>
+    </footer>
+
+    <!-- Модальные окна -->
+    <div class="confirmation-modal" id="confirmation-modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Подтверждение действия</h3>
+            <p id="modal-message">Вы уверены, что хотите выполнить это действие?</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="modal-cancel">Отмена</button>
+                <button class="btn btn-gold" id="modal-confirm">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="update-modal" id="update-modal">
+        <div class="update-content">
+            <h3 id="update-title">Изменить количество</h3>
+            <div class="form-group">
+                <label id="car-name-label"></label>
+                <input type="number" id="new-available" class="form-control" min="0">
+                <div class="error-message" id="max-available-error" style="display: none;">Превышено максимальное количество (60% от общего выпуска)</div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="update-cancel">Отмена</button>
+                <button class="btn btn-gold" id="update-confirm">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомления -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Инициализация базы данных
+        function initDatabase() {
+            // Аккаунты
+            if (!localStorage.getItem('accounts')) {
+                const accounts = [
+                    {
+                        id: 1,
+                        email: 'admin@luxurymotors.ru',
+                        password: 'admin123',
+                        firstName: 'Admin',
+                        lastName: 'Adminov',
+                        birthdate: '1990-01-01',
+                        registrationDate: new Date().toLocaleDateString(),
+                        isAdmin: true
+                    }
+                ];
+                localStorage.setItem('accounts', JSON.stringify(accounts));
+            }
+            
+            // Автомобили
+            if (!localStorage.getItem('cars')) {
+                const carsData = [
+                    {
+                        id: 0,
+                        name: "Ferrari 250 GTO",
+                        price: "$70,000,000",
+                        description: "Ferrari 250 GTO — один из самых редких и ценных автомобилей в мире. Всего было выпущено 36 экземпляров в период с 1962 по 1964 год.",
+                        fullDescription: "Ferrari 250 GTO — легендарный спортивный автомобиль, выпускавшийся итальянской компанией Ferrari с 1962 по 1964 год. Всего было выпущено 36 экземпляров, что делает его одним из самых редких и ценных автомобилей в мире.",
+                        images: [],
+                        specs: [
+                            { name: "Год выпуска", value: "1962-1964" },
+                            { name: "Двигатель", value: "V12, 3.0 л" },
+                            { name: "Мощность", value: "302 л.с." },
+                            { name: "Разгон 0-100 км/ч", value: "5.8 сек" },
+                            { name: "Макс. скорость", value: "280 км/ч" },
+                            { name: "Тип кузова", value: "2-дверное купе" },
+                            { name: "Произведено", value: "36 экземпляров" }
+                        ],
+                        available: 2,
+                        totalProduced: 36
+                    },
+                    {
+                        id: 1,
+                        name: "Mercedes-Benz 300SL",
+                        price: "$1,500,000",
+                        description: "Mercedes-Benz 300SL с его знаменитыми дверями «крыло чайки» — один из самых желанных классических автомобилей в мире.",
+                        fullDescription: "Mercedes-Benz 300SL (W198) — спортивный автомобиль, выпускавшийся немецкой компанией Mercedes-Benz с 1954 по 1963 год. Он прославился своими дверями типа «крыло чайки».",
+                        images: [],
+                        specs: [
+                            { name: "Год выпуска", value: "1954-1963" },
+                            { name: "Двигатель", value: "Рядный 6, 3.0 л" },
+                            { name: "Мощность", value: "215 л.с." },
+                            { name: "Разгон 0-100 км/ч", value: "8.8 сек" },
+                            { name: "Макс. скорость", value: "260 км/ч" },
+                            { name: "Тип кузова", value: "Купе/Roadster" },
+                            { name: "Особенность", value: "Двери 'крыло чайки'" }
+                        ],
+                        available: 1,
+                        totalProduced: 1400
+                    },
+                    {
+                        id: 2,
+                        name: "Jaguar E-Type",
+                        price: "$450,000",
+                        description: "Jaguar E-Type, представленный в 1961 году, считается одним из самых красивых автомобилей всех времен.",
+                        fullDescription: "Jaguar E-Type (или Jaguar XK-E) — спортивный автомобиль, выпускавшийся британской компанией Jaguar с 1961 по 1975 год.",
+                        images: [],
+                        specs: [
+                            { name: "Год выпуска", value: "1961-1975" },
+                            { name: "Двигатель", value: "Рядный 6, 3.8/4.2 л" },
+                            { name: "Мощность", value: "265-272 л.с." },
+                            { name: "Разгон 0-100 км/ч", value: "6.9 сек" },
+                            { name: "Макс. скорость", value: "240 км/ч" },
+                            { name: "Тип кузова", value: "Купе/Roadster" },
+                            { name: "Особенность", value: "Культовый дизайн" }
+                        ],
+                        available: 3,
+                        totalProduced: 72372
+                    },
+                    {
+                        id: 3,
+                        name: "Porsche 550 Spyder",
+                        price: "$5,000,000",
+                        description: "Porsche 550 Spyder — легендарный спортивный автомобиль 1950-х годов, известный своими победами в гонках.",
+                        fullDescription: "Porsche 550 Spyder — спортивный автомобиль, выпускавшийся немецкой компанией Porsche с 1953 по 1956 год.",
+                        images: [],
+                        specs: [
+                            { name: "Год выпуска", value: "1953-1956" },
+                            { name: "Двигатель", value: "Оппозитный 4, 1.5 л" },
+                            { name: "Мощность", value: "110 л.с." },
+                            { name: "Разгон 0-100 км/ч", value: "9.1 сек" },
+                            { name: "Макс. скорость", value: "220 км/ч" },
+                            { name: "Тип кузова", value: "Родстер" },
+                            { name: "Произведено", value: "90 экземпляров" }
+                        ],
+                        available: 1,
+                        totalProduced: 90
+                    }
+                ];
+                localStorage.setItem('cars', JSON.stringify(carsData));
+            }
+            
+            // Заказы (для всех пользователей)
+            if (!localStorage.getItem('orders')) {
+                localStorage.setItem('orders', JSON.stringify([]));
+            }
+        }
+
+        // Получение текущего пользователя
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem('currentUser'));
+        }
+
+        // Получение всех аккаунтов
+        function getAllAccounts() {
+            return JSON.parse(localStorage.getItem('accounts') || []);
+        }
+
+        // Получение автомобилей
+        function getCars() {
+            return JSON.parse(localStorage.getItem('cars')) || [];
+        }
+
+        // Получение всех заказов
+        function getAllOrders() {
+            return JSON.parse(localStorage.getItem('orders')) || [];
+        }
+
+        // Сохранение данных
+        function saveAccounts(accounts) {
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+        }
+        
+        function saveCars(cars) {
+            localStorage.setItem('cars', JSON.stringify(cars));
+        }
+        
+        function saveOrders(orders) {
+            localStorage.setItem('orders', JSON.stringify(orders));
+        }
+
+        // Проверка аутентификации
+        function isAuthenticated() {
+            return localStorage.getItem('isAuthenticated') === 'true';
+        }
+
+        // Обновление кнопок авторизации
+        function updateAuthButtons() {
+            const authButtons = document.getElementById('auth-buttons');
+            if (!authButtons) return;
+            
+            if (isAuthenticated()) {
+                const currentUser = getCurrentUser();
+                authButtons.innerHTML = `
+                    <a href="#" class="btn btn-outline" onclick="logout(); return false;">Выйти (${currentUser.email})</a>
+                `;
+            } else {
+                authButtons.innerHTML = `
+                    <a href="#" class="btn btn-outline" onclick="showPage('login'); return false;">Войти</a>
+                    <a href="#" class="btn btn-gold" onclick="showPage('register'); return false;">Регистрация</a>
+                `;
+            }
+        }
+
+        // Выход из системы
+        function logout() {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('currentUser');
+            updateAuthButtons();
+            showPage('home');
+        }
+
+        // Показать уведомление
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.opacity = '1';
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+            }, 3000);
+        }
+
+        // Модальное окно подтверждения
+        function showConfirmation(title, message, callback) {
+            const modal = document.getElementById('confirmation-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const modalCancel = document.getElementById('modal-cancel');
+            const modalConfirm = document.getElementById('modal-confirm');
+            
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            
+            modalConfirm.onclick = function() {
+                callback();
+                modal.style.display = 'none';
+            };
+            
+            modalCancel.onclick = function() {
+                modal.style.display = 'none';
+            };
+            
+            modal.style.display = 'flex';
+        }
+
+        // Показать страницу
+        function showPage(pageId, param = null) {
+            if ((pageId === 'profile' || pageId === 'order') && !isAuthenticated()) {
+                showPage('register');
+                return;
+            }
+            
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            const pageElement = document.getElementById(pageId);
+            if (pageElement) {
+                pageElement.classList.add('active');
+            }
+            
+            updateNavLinks(pageId);
+            loadPageContent(pageId, param);
+            window.scrollTo(0, 0);
+        }
+
+        // Обновление активных ссылок в навигации
+        function updateNavLinks(pageId) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-page') === pageId) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Загрузка контента страницы
+        function loadPageContent(pageId, param) {
+            switch(pageId) {
+                case 'home': break;
+                case 'cars': renderCars(); break;
+                case 'car-detail': if (param !== null) showCarDetail(param); break;
+                case 'order': loadOrderContent(param); break;
+                case 'profile': loadProfileContent(); break;
+                case 'login': loadLoginContent(); break;
+                case 'register': loadRegisterContent(); break;
+                case 'about': break;
+            }
+        }
+
+        // Обработчик для личного кабинета
+        function handleProfileClick() {
+            if (isAuthenticated()) {
+                showPage('profile');
+            } else {
+                showPage('register');
+            }
+        }
+
+        // Обработчик для оформления заказа
+        function handleOrderClick(carId) {
+            if (isAuthenticated()) {
+                showPage('order', carId);
+            } else {
+                showPage('register');
+            }
+        }
+
+        // Отобразить автомобили на странице каталога
+        function renderCars() {
+            const carsGrid = document.getElementById('cars-grid');
+            if (!carsGrid) return;
+            
+            carsGrid.innerHTML = '';
+            const cars = getCars();
+            
+            cars.forEach(car => {
+                const carCard = `
+                    <div class="car-card">
+                        <div class="car-img-placeholder">
+                            [Изображение ${car.name}]
+                        </div>
+                        <div class="car-content">
+                            <h3 class="car-title">${car.name}</h3>
+                            <div class="car-price">${car.price}</div>
+                            <div class="car-available">Доступно: ${car.available} шт.</div>
+                            <p class="car-desc">${car.description}</p>
+                            <a href="#" class="btn btn-outline btn-view" onclick="showCarDetail(${car.id}); return false;">Подробнее</a>
+                        </div>
+                    </div>
+                `;
+                carsGrid.innerHTML += carCard;
+            });
+        }
+
+        // Показать детали автомобиля
+        function showCarDetail(carId) {
+            const cars = getCars();
+            const car = cars.find(c => c.id === carId);
+            if (!car) return;
+            
+            const carDetailPage = document.getElementById('car-detail');
+            if (!carDetailPage) return;
+            
+            let orderButton;
+            if (car.available > 0) {
+                orderButton = `
+                    <div class="order-section">
+                        <a href="#" class="btn btn-gold" 
+                           onclick="handleOrderClick(${car.id}); return false;">
+                           Оформить заказ
+                        </a>
+                    </div>
+                `;
+            } else {
+                orderButton = `
+                    <div class="order-section">
+                        <button class="btn btn-silver" disabled>
+                            Нет в наличии
+                        </button>
+                    </div>
+                `;
+            }
+            
+            carDetailPage.innerHTML = `
+                <div class="container">
+                    <div class="car-detail-container">
+                        <div class="car-gallery">
+                            <div class="main-img-placeholder">
+                                [Основное изображение ${car.name}]
+                            </div>
+                            <div class="thumbnails">
+                                ${car.images.map((_, index) => `
+                                    <div class="thumbnail-placeholder">
+                                        [Миниатюра ${index+1}]
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="car-info">
+                            <h1>${car.name}</h1>
+                            <div class="price">${car.price}</div>
+                            <div class="car-available">Доступно: ${car.available} шт.</div>
+                            <p>${car.fullDescription}</p>
+                            
+                            <div class="car-specs">
+                                ${car.specs.map(spec => `
+                                    <div class="spec-item">
+                                        <span class="spec-name">${spec.name}</span>
+                                        <span class="spec-value">${spec.value}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            
+                            ${orderButton}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            showPage('car-detail');
+        }
+
+        // Загрузка формы заказа
+        function loadOrderContent(carId = null) {
+            const orderPage = document.getElementById('order');
+            if (!orderPage) return;
+            
+            const currentUser = getCurrentUser();
+            const cars = getCars();
+            const car = cars.find(c => c.id === carId);
+            
+            if (!car || !currentUser) {
+                showPage('cars');
+                return;
+            }
+            
+            // Автозаполнение данных пользователя
+            const fullName = `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim();
+            const birthdate = currentUser.birthdate || '';
+            
+            orderPage.innerHTML = `
+                <div class="container">
+                    <h1 class="page-title">Оформление заказа - ${car.name}</h1>
+                    <div class="order-form" id="order-form">
+                        <div class="form-group">
+                            <label for="fullname">ФИО</label>
+                            <input type="text" id="fullname" class="form-control" placeholder="Иванов Иван Иванович" value="${fullName}">
+                            <div class="error-message" id="fullname-error">Обязательное заполнение! Минимум 2 слова</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="birthdate">Дата рождения</label>
+                            <input type="date" id="birthdate" class="form-control" value="${birthdate}">
+                            <div class="error-message" id="birthdate-error">Обязательное заполнение!</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="document">Паспортные данные</label>
+                            <input type="text" id="document" class="form-control" placeholder="Серия и номер паспорта (например: 1234 567890)" maxlength="11">
+                            <div class="error-message" id="document-error">Обязательное заполнение! Формат: 1234 567890</div>
+                        </div>
+                        
+                        <h3 class="section-title">Способ оплаты</h3>
+                        
+                        <div class="payment-options">
+                            <div class="payment-option" onclick="selectPayment('cash')">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <p>Наличные в салоне</p>
+                            </div>
+                            <div class="payment-option" onclick="selectPayment('card')">
+                                <i class="fas fa-credit-card"></i>
+                                <p>Онлайн картой</p>
+                            </div>
+                        </div>
+                        
+                        <div class="cash-warning" id="cash-warning">
+                            <p><i class="fas fa-exclamation-circle"></i> Обязательное присутствие в салоне в течение 3-х дней после оформления</p>
+                        </div>
+                        
+                        <div class="card-form" id="card-form">
+                            <h3 class="section-title">Данные банковской карты</h3>
+                            <div class="form-group">
+                                <label for="card-number">Номер карты</label>
+                                <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19">
+                                <div class="error-message" id="card-number-error">Обязательное заполнение! 16 цифр</div>
+                            </div>
+                            
+                            <div class="card-row">
+                                <div class="form-group">
+                                    <label for="card-expiry">Срок действия</label>
+                                    <input type="text" id="card-expiry" class="form-control" placeholder="ММ/ГГ" maxlength="5">
+                                    <div class="error-message" id="card-expiry-error">Обязательное заполнение! Формат: ММ/ГГ</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="card-cvv">CVV</label>
+                                    <input type="text" id="card-cvv" class="form-control" placeholder="123" maxlength="3">
+                                    <div class="error-message" id="card-cvv-error">Обязательное заполнение! 3 цифры</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-gold" onclick="submitOrder(${carId}); return false;">Подтвердить заказ</button>
+                    </div>
+                    
+                    <div class="order-success" id="order-success">
+                        <h2>Спасибо за покупку!</h2>
+                        <p>Ваш заказ успешно оформлен. Вы можете забрать автомобиль в нашем салоне через две недели.</p>
+                        <p><strong>Важно:</strong> Автомобиль необходимо забрать в течение трех месяцев после оформления заказа. 
+                        В противном случае контракт будет аннулирован, а 30% от суммы заказа не будут возвращены в качестве компенсации.</p>
+                        
+                        <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: center;">
+                            <a href="#" class="btn btn-gold" onclick="showPage('home'); return false;">На главную</a>
+                            <a href="#" class="btn btn-outline" onclick="showPage('profile'); return false;">Личный кабинет</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('order-success').style.display = 'none';
+            document.getElementById('cash-warning').style.display = 'none';
+            selectPayment('cash');
+            
+            // Добавляем маски ввода
+            document.getElementById('document')?.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 4) {
+                    value = value.substring(0, 4) + ' ' + value.substring(4, 10);
+                }
+                e.target.value = value;
+            });
+            
+            document.getElementById('card-number')?.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 16) value = value.substring(0, 16);
+                value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+                e.target.value = value;
+            });
+            
+            document.getElementById('card-expiry')?.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 4) value = value.substring(0, 4);
+                if (value.length > 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                e.target.value = value;
+            });
+            
+            document.getElementById('card-cvv')?.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/\D/g, '').substring(0, 3);
+            });
+        }
+
+        // Выбор способа оплаты
+        function selectPayment(type) {
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            
+            if (type === 'cash') {
+                document.querySelector('.payment-option:nth-child(1)').classList.add('active');
+                document.getElementById('card-form').style.display = 'none';
+                document.getElementById('cash-warning').style.display = 'block';
+            } else {
+                document.querySelector('.payment-option:nth-child(2)').classList.add('active');
+                document.getElementById('card-form').style.display = 'block';
+                document.getElementById('cash-warning').style.display = 'none';
+            }
+        }
+
+        // Валидация данных
+        function validateData() {
+            let isValid = true;
+            
+            // ФИО
+            const fullname = document.getElementById('fullname');
+            const fullnameError = document.getElementById('fullname-error');
+            if (!fullname.value.trim() || fullname.value.trim().split(' ').length < 2) {
+                fullname.classList.add('error');
+                fullnameError.style.display = 'block';
+                isValid = false;
+            } else {
+                fullname.classList.remove('error');
+                fullnameError.style.display = 'none';
+            }
+            
+            // Дата рождения
+            const birthdate = document.getElementById('birthdate');
+            const birthdateError = document.getElementById('birthdate-error');
+            if (!birthdate.value) {
+                birthdate.classList.add('error');
+                birthdateError.style.display = 'block';
+                isValid = false;
+            } else {
+                birthdate.classList.remove('error');
+                birthdateError.style.display = 'none';
+            }
+            
+            // Паспортные данные
+            const documentInput = document.getElementById('document');
+            const documentError = document.getElementById('document-error');
+            if (!documentInput.value || !/^\d{4} \d{6}$/.test(documentInput.value)) {
+                documentInput.classList.add('error');
+                documentError.style.display = 'block';
+                isValid = false;
+            } else {
+                documentInput.classList.remove('error');
+                documentError.style.display = 'none';
+            }
+            
+            // Если выбран онлайн-оплата
+            if (document.querySelector('.payment-option:nth-child(2)').classList.contains('active')) {
+                // Номер карты
+                const cardNumber = document.getElementById('card-number');
+                const cardNumberError = document.getElementById('card-number-error');
+                if (!cardNumber.value || cardNumber.value.replace(/\D/g, '').length !== 16) {
+                    cardNumber.classList.add('error');
+                    cardNumberError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    cardNumber.classList.remove('error');
+                    cardNumberError.style.display = 'none';
+                }
+                
+                // Срок действия
+                const cardExpiry = document.getElementById('card-expiry');
+                const cardExpiryError = document.getElementById('card-expiry-error');
+                if (!cardExpiry.value || !/^\d{2}\/\d{2}$/.test(cardExpiry.value)) {
+                    cardExpiry.classList.add('error');
+                    cardExpiryError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    cardExpiry.classList.remove('error');
+                    cardExpiryError.style.display = 'none';
+                }
+                
+                // CVV
+                const cardCvv = document.getElementById('card-cvv');
+                const cardCvvError = document.getElementById('card-cvv-error');
+                if (!cardCvv.value || cardCvv.value.length !== 3) {
+                    cardCvv.classList.add('error');
+                    cardCvvError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    cardCvv.classList.remove('error');
+                    cardCvvError.style.display = 'none';
+                }
+            }
+            
+            return isValid;
+        }
+
+        // Отправка заказа
+        function submitOrder(carId) {
+            if (!validateData()) {
+                showNotification('Пожалуйста, исправьте ошибки в форме', 'error');
+                return;
+            }
+            
+            saveOrder(carId);
+            document.getElementById('order-form').style.display = 'none';
+            document.getElementById('order-success').style.display = 'block';
+        }
+
+        // Сохранение заказа
+        function saveOrder(carId) {
+            const cars = getCars();
+            const car = cars.find(c => c.id === carId);
+            const currentUser = getCurrentUser();
+            
+            if (!car || !currentUser) return;
+            
+            const orders = getAllOrders();
+            
+            const order = {
+                id: Date.now(),
+                carId: carId,
+                carName: car.name,
+                price: car.price,
+                date: new Date().toLocaleDateString(),
+                status: "Оформлен",
+                userId: currentUser.id,
+                userEmail: currentUser.email
+            };
+            
+            // Уменьшаем количество доступных автомобилей
+            car.available--;
+            saveCars(cars);
+            
+            // Сохраняем заказ
+            orders.push(order);
+            saveOrders(orders);
+        }
+
+        // Загрузка личного кабинета
+        function loadProfileContent() {
+            const profilePage = document.getElementById('profile');
+            if (!profilePage) return;
+            
+            const currentUser = getCurrentUser();
+            const isAdmin = currentUser && currentUser.isAdmin;
+            
+            let ordersHTML = '';
+            let adminPanelHTML = '';
+            
+            // Если пользователь администратор
+            if (isAdmin) {
+                const accounts = getAllAccounts();
+                const cars = getCars();
+                const allOrders = getAllOrders();
+                
+                // Панель управления аккаунтами
+                adminPanelHTML += `
+                    <div class="admin-panel">
+                        <div class="admin-section">
+                            <h3>Управление аккаунтами</h3>
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Email</th>
+                                        <th>Имя</th>
+                                        <th>Дата регистрации</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${accounts.map(account => `
+                                        <tr>
+                                            <td>${account.id}</td>
+                                            <td>${account.email}</td>
+                                            <td>${account.firstName} ${account.lastName}</td>
+                                            <td>${account.registrationDate}</td>
+                                            <td>
+                                                <div class="admin-actions">
+                                                    ${!account.isAdmin ? `
+                                                        <button class="admin-btn btn-delete" onclick="deleteAccount(${account.id}); return false;">Удалить</button>
+                                                    ` : ''}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="admin-section">
+                            <h3>Управление автомобилями</h3>
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Модель</th>
+                                        <th>Цена</th>
+                                        <th>В наличии</th>
+                                        <th>Общий выпуск</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${cars.map(car => `
+                                        <tr>
+                                            <td>${car.name}</td>
+                                            <td>${car.price}</td>
+                                            <td>${car.available}</td>
+                                            <td>${car.totalProduced}</td>
+                                            <td>
+                                                <div class="admin-actions">
+                                                    <button class="admin-btn btn-update" onclick="showUpdateCarModal(${car.id}); return false;">Изменить</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="admin-section">
+                            <h3>Управление заказами</h3>
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID заказа</th>
+                                        <th>Автомобиль</th>
+                                        <th>Пользователь</th>
+                                        <th>Статус</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${allOrders.map(order => `
+                                        <tr>
+                                            <td>#${order.id}</td>
+                                            <td>${order.carName}</td>
+                                            <td>${order.userEmail}</td>
+                                            <td>
+                                                <select class="status-select" data-order-id="${order.id}" onchange="updateOrderStatus(${order.id}, this.value)">
+                                                    <option value="Оформлен" ${order.status === 'Оформлен' ? 'selected' : ''}>Оформлен</option>
+                                                    <option value="Готов" ${order.status === 'Готов' ? 'selected' : ''}>Готов</option>
+                                                    <option value="Продан" ${order.status === 'Продан' ? 'selected' : ''}>Продан</option>
+                                                    <option value="Отменен" ${order.status === 'Отменен' ? 'selected' : ''}>Отменен</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <div class="admin-actions">
+                                                    <button class="admin-btn btn-delete" onclick="deleteOrder(${order.id}); return false;">Удалить</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Заказы пользователя
+            const userOrders = getAllOrders().filter(order => 
+                order.userId === currentUser.id
+            );
+            
+            // Активные заказы (не отмененные)
+            const activeOrders = userOrders.filter(order => 
+                order.status !== "Отменен"
+            );
+            
+            // Отмененные заказы
+            const cancelledOrders = userOrders.filter(order => 
+                order.status === "Отменен"
+            );
+            
+            if (activeOrders.length > 0 || cancelledOrders.length > 0) {
+                ordersHTML = `
+                    <div class="tabs">
+                        <div class="tab active" id="active-orders-tab" onclick="switchTab('active-orders')">Активные заказы</div>
+                        <div class="tab" id="cancelled-orders-tab" onclick="switchTab('cancelled-orders')">Отмененные заказы</div>
+                    </div>
+                    
+                    <div id="active-orders-section">
+                        <h2>Активные заказы</h2>
+                        <div class="orders-grid">
+                            ${activeOrders.map(order => `
+                                <div class="order-card">
+                                    <div class="order-header">
+                                        <h3>${order.carName}</h3>
+                                        <div class="order-status ${order.status === 'Отменен' ? 'cancelled' : ''}">${order.status}</div>
+                                    </div>
+                                    <div class="order-details">
+                                        <p><strong>Цена:</strong> ${order.price}</p>
+                                        <p><strong>Дата заказа:</strong> ${order.date}</p>
+                                        <p><strong>Номер заказа:</strong> #${order.id}</p>
+                                        <p class="order-info">${order.status === 'Оформлен' 
+                                            ? 'Заказ находится в статусе оформлен. Ожидайте подтверждения от менеджера.' 
+                                            : order.status === 'Готов'
+                                                ? 'Автомобиль готов к выдаче. Пожалуйста, свяжитесь с менеджером.'
+                                                : 'Заказ завершен. Спасибо за покупку!'}</p>
+                                    </div>
+                                    <div class="order-actions">
+                                        <a href="#" class="btn btn-outline" 
+                                           onclick="showCarDetail(${order.carId}); return false;">
+                                           Перейти к описанию автомобиля
+                                        </a>
+                                        ${order.status === 'Оформлен' ? `
+                                            <button class="btn btn-cancel" 
+                                               onclick="cancelOrder(${order.id}); return false;">
+                                               Отменить заказ
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div id="cancelled-orders-section" style="display: none;">
+                        <h2>Отмененные заказы</h2>
+                        <div class="orders-grid">
+                            ${cancelledOrders.map(order => `
+                                <div class="order-card">
+                                    <div class="order-header">
+                                        <h3>${order.carName}</h3>
+                                        <div class="order-status cancelled">${order.status}</div>
+                                    </div>
+                                    <div class="order-details">
+                                        <p><strong>Цена:</strong> ${order.price}</p>
+                                        <p><strong>Дата заказа:</strong> ${order.date}</p>
+                                        <p><strong>Номер заказа:</strong> #${order.id}</p>
+                                        <p class="order-info">Заказ был отменен.</p>
+                                    </div>
+                                    <div class="order-actions">
+                                        <a href="#" class="btn btn-outline" 
+                                           onclick="showCarDetail(${order.carId}); return false;">
+                                           Перейти к описанию автомобиля
+                                        </a>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                ordersHTML = `
+                    <div class="no-orders">
+                        <i class="fas fa-car"></i>
+                        <h3>У вас пока нет заказов</h3>
+                        <p>Начните покупки в нашем каталоге</p>
+                        <a href="#" class="btn btn-gold" onclick="showPage('cars'); return false;">Перейти в каталог</a>
+                    </div>
+                `;
+            }
+            
+            profilePage.innerHTML = `
+                <div class="container">
+                    <h1 class="page-title">Личный кабинет</h1>
+                    <div class="profile-container">
+                        <div class="user-info">
+                            <h2>Личная информация</h2>
+                            <div class="info-item">
+                                <div class="info-label">ФИО</div>
+                                <div class="info-value">${currentUser.firstName || ''} ${currentUser.lastName || ''}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Email</div>
+                                <div class="info-value">${currentUser.email || ''}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Дата рождения</div>
+                                <div class="info-value">${currentUser.birthdate || ''}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Дата регистрации</div>
+                                <div class="info-value">${currentUser.registrationDate || ''}</div>
+                            </div>
+                            ${currentUser.isAdmin ? `
+                                <div class="info-item">
+                                    <div class="info-label">Статус</div>
+                                    <div class="info-value">Администратор</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="recent-cars">
+                            ${ordersHTML}
+                        </div>
+                    </div>
+                    
+                    ${adminPanelHTML}
+                </div>
+            `;
+        }
+
+        // Переключение вкладок заказов
+        function switchTab(tabId) {
+            document.getElementById('active-orders-tab').classList.remove('active');
+            document.getElementById('cancelled-orders-tab').classList.remove('active');
+            document.getElementById('active-orders-section').style.display = 'none';
+            document.getElementById('cancelled-orders-section').style.display = 'none';
+            
+            if (tabId === 'active-orders') {
+                document.getElementById('active-orders-tab').classList.add('active');
+                document.getElementById('active-orders-section').style.display = 'block';
+            } else {
+                document.getElementById('cancelled-orders-tab').classList.add('active');
+                document.getElementById('cancelled-orders-section').style.display = 'block';
+            }
+        }
+
+        // Показать модальное окно изменения количества
+        function showUpdateCarModal(carId) {
+            const cars = getCars();
+            const car = cars.find(c => c.id === carId);
+            if (!car) return;
+            
+            const maxAvailable = Math.floor(car.totalProduced * 0.6);
+            
+            const modal = document.getElementById('update-modal');
+            const title = document.getElementById('update-title');
+            const carNameLabel = document.getElementById('car-name-label');
+            const newAvailableInput = document.getElementById('new-available');
+            const maxAvailableError = document.getElementById('max-available-error');
+            const updateCancel = document.getElementById('update-cancel');
+            const updateConfirm = document.getElementById('update-confirm');
+            
+            title.textContent = `Изменение количества: ${car.name}`;
+            carNameLabel.textContent = `Новое количество (макс. ${maxAvailable}, сейчас: ${car.available}):`;
+            newAvailableInput.value = car.available;
+            newAvailableInput.max = maxAvailable;
+            
+            newAvailableInput.oninput = function() {
+                if (parseInt(this.value) > maxAvailable) {
+                    maxAvailableError.style.display = 'block';
+                } else {
+                    maxAvailableError.style.display = 'none';
+                }
+            };
+            
+            updateConfirm.onclick = function() {
+                const newValue = parseInt(newAvailableInput.value);
+                if (isNaN(newValue)) {
+                    showNotification('Введите корректное число!', 'error');
+                    return;
+                }
+                
+                if (newValue > maxAvailable) {
+                    showNotification(`Количество не может превышать ${maxAvailable} (60% от общего выпуска)`, 'error');
+                    return;
+                }
+                
+                car.available = newValue;
+                saveCars(cars);
+                modal.style.display = 'none';
+                showNotification('Количество успешно обновлено!', 'success');
+                loadProfileContent();
+            };
+            
+            updateCancel.onclick = function() {
+                modal.style.display = 'none';
+            };
+            
+            modal.style.display = 'flex';
+        }
+
+        // Обновление статуса заказа
+        function updateOrderStatus(orderId, newStatus) {
+            const orders = getAllOrders();
+            const orderIndex = orders.findIndex(o => o.id === orderId);
+            
+            if (orderIndex === -1) return;
+            
+            orders[orderIndex].status = newStatus;
+            saveOrders(orders);
+            
+            // Если статус изменен на "Отменен", возвращаем автомобиль
+            if (newStatus === 'Отменен') {
+                const cars = getCars();
+                const carIndex = cars.findIndex(c => c.id === orders[orderIndex].carId);
+                
+                if (carIndex !== -1) {
+                    cars[carIndex].available += 1;
+                    saveCars(cars);
+                }
+            }
+            
+            showNotification('Статус заказа обновлен', 'success');
+        }
+
+        // Удаление аккаунта (для администратора)
+        function deleteAccount(accountId) {
+            const accounts = getAllAccounts();
+            const account = accounts.find(a => a.id === accountId);
+            
+            if (!account) return;
+            
+            showConfirmation(
+                "Удаление аккаунта",
+                `Вы уверены, что хотите удалить аккаунт ${account.email}?`,
+                function() {
+                    const updatedAccounts = accounts.filter(a => a.id !== accountId);
+                    saveAccounts(updatedAccounts);
+                    
+                    const currentUser = getCurrentUser();
+                    if (currentUser && currentUser.id === accountId) {
+                        logout();
+                    } else {
+                        loadProfileContent();
+                        showNotification('Аккаунт успешно удален!', 'success');
+                    }
+                }
+            );
+        }
+
+        // Удаление заказа (для администратора)
+        function deleteOrder(orderId) {
+            const orders = getAllOrders();
+            const orderIndex = orders.findIndex(o => o.id === orderId);
+            
+            if (orderIndex === -1) return;
+            
+            showConfirmation(
+                "Удаление заказа",
+                `Вы уверены, что хотите удалить заказ #${orderId}?`,
+                function() {
+                    if (orders[orderIndex].status === 'Оформлен') {
+                        const cars = getCars();
+                        const carIndex = cars.findIndex(c => c.id === orders[orderIndex].carId);
+                        
+                        if (carIndex !== -1) {
+                            cars[carIndex].available += 1;
+                            saveCars(cars);
+                        }
+                    }
+                    
+                    orders.splice(orderIndex, 1);
+                    saveOrders(orders);
+                    loadProfileContent();
+                    showNotification('Заказ успешно удален!', 'success');
+                }
+            );
+        }
+
+        // Отмена заказа пользователем
+        function cancelOrder(orderId) {
+            const orders = getAllOrders();
+            const orderIndex = orders.findIndex(o => o.id === orderId);
+            
+            if (orderIndex === -1) return;
+            
+            const order = orders[orderIndex];
+            
+            showConfirmation(
+                "Отмена заказа",
+                `Вы уверены, что хотите отменить заказ #${orderId}? Обратите внимание: при отмене заказа взимается штраф 10% от стоимости.`,
+                function() {
+                    const cars = getCars();
+                    const carIndex = cars.findIndex(c => c.id === order.carId);
+                    
+                    if (carIndex !== -1) {
+                        cars[carIndex].available += 1;
+                        saveCars(cars);
+                    }
+                    
+                    orders[orderIndex].status = "Отменен";
+                    saveOrders(orders);
+                    loadProfileContent();
+                    showNotification('Заказ успешно отменен!', 'success');
+                }
+            );
+        }
+
+        // Загрузка страницы авторизации
+        function loadLoginContent() {
+            const loginPage = document.getElementById('login');
+            if (!loginPage) return;
+            
+            loginPage.innerHTML = `
+                <div class="container">
+                    <div class="auth-container">
+                        <h2>Вход в личный кабинет</h2>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="form-control" placeholder="Ваш email">
+                            <div class="error-message">Обязательное заполнение!</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Пароль</label>
+                            <input type="password" id="password" class="form-control" placeholder="Ваш пароль">
+                            <div class="error-message">Обязательное заполнение!</div>
+                        </div>
+                        
+                        <button class="btn btn-gold" style="width: 100%;" onclick="submitLogin(); return false;">Войти</button>
+                        
+                        <div class="form-footer">
+                            <p>Еще не зарегистрированы? <a href="#" onclick="showPage('register'); return false;">Создать аккаунт</a></p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Валидация регистрации
+        function validateRegistration() {
+            let isValid = true;
+            
+            // Имя
+            const firstName = document.getElementById('first-name');
+            if (!firstName.value.trim() || !/^[a-zA-Zа-яА-Я]+$/.test(firstName.value.trim())) {
+                firstName.classList.add('error');
+                isValid = false;
+            } else {
+                firstName.classList.remove('error');
+            }
+            
+            // Фамилия
+            const lastName = document.getElementById('last-name');
+            if (!lastName.value.trim() || !/^[a-zA-Zа-яА-Я]+$/.test(lastName.value.trim())) {
+                lastName.classList.add('error');
+                isValid = false;
+            } else {
+                lastName.classList.remove('error');
+            }
+            
+            // Email
+            const email = document.getElementById('reg-email');
+            if (!email.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+                email.classList.add('error');
+                isValid = false;
+            } else {
+                email.classList.remove('error');
+            }
+            
+            // Пароль
+            const password = document.getElementById('reg-password');
+            if (!password.value || password.value.length < 6) {
+                password.classList.add('error');
+                isValid = false;
+            } else {
+                password.classList.remove('error');
+            }
+            
+            // Подтверждение пароля
+            const confirmPassword = document.getElementById('reg-confirm-password');
+            if (!confirmPassword.value || password.value !== confirmPassword.value) {
+                confirmPassword.classList.add('error');
+                isValid = false;
+            } else {
+                confirmPassword.classList.remove('error');
+            }
+            
+            return isValid;
+        }
+
+        // Загрузка страницы регистрации
+        function loadRegisterContent() {
+            const registerPage = document.getElementById('register');
+            if (!registerPage) return;
+            
+            registerPage.innerHTML = `
+                <div class="container">
+                    <div class="register-container">
+                        <h2>Регистрация</h2>
+                        <div class="name-fields">
+                            <div class="form-group">
+                                <label for="first-name">Имя*</label>
+                                <input type="text" id="first-name" class="form-control" placeholder="Иван">
+                                <div class="error-message">Обязательное заполнение! Только буквы</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="last-name">Фамилия*</label>
+                                <input type="text" id="last-name" class="form-control" placeholder="Иванов">
+                                <div class="error-message">Обязательное заполнение! Только буквы</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-birthdate">Дата рождения</label>
+                            <input type="date" id="reg-birthdate" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-email">Email*</label>
+                            <input type="email" id="reg-email" class="form-control" placeholder="Ваш email">
+                            <div class="error-message">Обязательное заполнение! Формат: email@example.com</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-password">Пароль*</label>
+                            <input type="password" id="reg-password" class="form-control" placeholder="Придумайте пароль">
+                            <div class="error-message">Обязательное заполнение! Минимум 6 символов</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-confirm-password">Подтвердите пароль*</label>
+                            <input type="password" id="reg-confirm-password" class="form-control" placeholder="Повторите пароль">
+                            <div class="error-message">Обязательное заполнение! Пароли должны совпадать</div>
+                        </div>
+                        
+                        <button class="btn btn-gold" style="width: 100%;" onclick="submitRegister(); return false;">Зарегистрироваться</button>
+                        
+                        <div class="form-footer">
+                            <p>Уже зарегистрированы? <a href="#" onclick="showPage('login'); return false;">Войти в аккаунт</a></p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Отправка формы авторизации
+        function submitLogin() {
+            const email = document.getElementById('email')?.value;
+            const password = document.getElementById('password')?.value;
+            
+            if (!email || !password) {
+                showNotification('Заполните все поля', 'error');
+                return;
+            }
+            
+            const accounts = getAllAccounts();
+            const account = accounts.find(a => a.email === email && a.password === password);
+            
+            if (account) {
+                localStorage.setItem('isAuthenticated', 'true');
+                localStorage.setItem('currentUser', JSON.stringify(account));
+                
+                updateAuthButtons();
+                showPage('profile');
+            } else {
+                showNotification('Неверный email или пароль', 'error');
+            }
+        }
+
+        // Отправка формы регистрации
+        function submitRegister() {
+            if (!validateRegistration()) {
+                showNotification('Пожалуйста, исправьте ошибки в форме', 'error');
+                return;
+            }
+            
+            const firstName = document.getElementById('first-name')?.value;
+            const lastName = document.getElementById('last-name')?.value;
+            const birthdate = document.getElementById('reg-birthdate')?.value;
+            const email = document.getElementById('reg-email')?.value;
+            const password = document.getElementById('reg-password')?.value;
+            
+            const accounts = getAllAccounts();
+            const emailErrorExists = document.getElementById('reg-email-exists');
+            
+            if (accounts.some(a => a.email === email)) {
+                showNotification('Аккаунт с таким email уже существует', 'error');
+                return;
+            }
+            
+            const newAccount = {
+                id: Date.now(),
+                email: email,
+                password: password,
+                firstName: firstName,
+                lastName: lastName,
+                birthdate: birthdate,
+                registrationDate: new Date().toLocaleDateString(),
+                isAdmin: false
+            };
+            
+            accounts.push(newAccount);
+            saveAccounts(accounts);
+            
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('currentUser', JSON.stringify(newAccount));
+            
+            updateAuthButtons();
+            showPage('profile');
+            showNotification('Регистрация прошла успешно!', 'success');
+        }
+
+        // Инициализация после загрузки страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            initDatabase();
+            renderCars();
+            updateAuthButtons();
+            
+            // При первом открытии сбросить аутентификацию
+            if (!sessionStorage.getItem('firstLoad')) {
+                sessionStorage.setItem('firstLoad', 'true');
+                localStorage.removeItem('isAuthenticated');
+                localStorage.removeItem('currentUser');
+            }
+        });
+    </script>
+</body>
+</html>
